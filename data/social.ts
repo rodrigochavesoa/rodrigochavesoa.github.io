@@ -1,0 +1,43 @@
+export type SocialLink = {
+  label: string;
+  href: string;
+  icon: "youtube" | "linkedin" | "behance" | "github" | "instagram";
+};
+
+export const socialLinks: SocialLink[] = [
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@colabdeveloper",
+    icon: "youtube",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/rodrigochavesoa",
+    icon: "linkedin",
+  },
+  {
+    label: "Behance",
+    href: "https://behance.net/rodrigochavesoa",
+    icon: "behance",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/rodrigochavesoa",
+    icon: "github",
+  },
+  {
+    label: "Instagram STAFF",
+    href: "https://www.instagram.com/staff.app/",
+    icon: "instagram",
+  },
+  {
+    label: "Instagram RC STORE",
+    href: "https://www.instagram.com/rcstoreoficial/",
+    icon: "instagram",
+  },
+  {
+    label: "Instagram Ponto Chave Design",
+    href: "https://www.instagram.com/pontochavedesign/",
+    icon: "instagram",
+  },
+];

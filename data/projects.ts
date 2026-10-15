@@ -1,19 +1,25 @@
 /**
- * Projetos do portfólio.
- * Fixados em github.com/rodrigochavesoa (GraphQL pinnedItems, 2026-10-15),
- * mais o Colab_Developer como card de destaque STAFF APP.
- * Descrições copiadas dos campos públicos. Sem texto inventado.
+ * Projetos publicados.
+ * Fixados em github.com/rodrigochavesoa (2026-10-15), o site Colab Developer
+ * e o STAFF - Guia de Exercícios (repositório privado, site no ar).
+ * Descrições a partir dos textos públicos. Sem texto inventado.
  */
+
+export type ProjectSite = {
+  label: string;
+  href: string;
+};
 
 export type Project = {
   name: string;
-  repo: string;
+  repo: string | null;
   description: string;
-  language: string;
-  stars: number;
-  repoUrl: string;
-  siteUrl: string | null;
+  language: string | null;
+  stars: number | null;
+  repoUrl: string | null;
+  sites: ProjectSite[];
   featured: boolean;
+  privateRepo: boolean;
 };
 
 export const projects: Project[] = [
@@ -25,8 +31,29 @@ export const projects: Project[] = [
     language: "HTML",
     stars: 0,
     repoUrl: "https://github.com/rodrigochavesoa/Colab_Developer",
-    siteUrl: "https://rodrigochavesoa.github.io/Colab_Developer/",
+    sites: [
+      {
+        label: "Site",
+        href: "https://rodrigochavesoa.github.io/Colab_Developer/",
+      },
+    ],
     featured: true,
+    privateRepo: false,
+  },
+  {
+    name: "STAFF - Guia de Exercícios",
+    repo: null,
+    description:
+      "Guia de exercícios com busca por nome, grupo ou código, e fichas de treino online. Em rcstorestaff.com.br/staff, a STAFF descreve planos personalizados de musculação e corrida, com suporte e treinos também pelo WhatsApp.",
+    language: null,
+    stars: null,
+    repoUrl: null,
+    sites: [
+      { label: "STAFF", href: "https://rcstorestaff.com.br/staff" },
+      { label: "Guia", href: "https://rcstorestaff.com.br/" },
+    ],
+    featured: false,
+    privateRepo: true,
   },
   {
     name: "split-payment-simulation",
@@ -36,8 +63,9 @@ export const projects: Project[] = [
     language: "Java",
     stars: 4,
     repoUrl: "https://github.com/rodrigochavesoa/split-payment-simulation",
-    siteUrl: null,
+    sites: [],
     featured: false,
+    privateRepo: false,
   },
   {
     name: "colab-pdf-reader",
@@ -47,8 +75,9 @@ export const projects: Project[] = [
     language: "JavaScript",
     stars: 6,
     repoUrl: "https://github.com/rodrigochavesoa/colab-pdf-reader",
-    siteUrl: null,
+    sites: [],
     featured: false,
+    privateRepo: false,
   },
   {
     name: "gdg-lauro-de-freitas",
@@ -58,8 +87,9 @@ export const projects: Project[] = [
     language: "JavaScript",
     stars: 0,
     repoUrl: "https://github.com/rodrigochavesoa/gdg-lauro-de-freitas",
-    siteUrl: "https://gdg-lauro-de-freitas.vercel.app/",
+    sites: [{ label: "Site", href: "https://gdg-lauro-de-freitas.vercel.app/" }],
     featured: false,
+    privateRepo: false,
   },
   {
     name: "studylib-direct-pdf-downloader",
@@ -69,8 +99,9 @@ export const projects: Project[] = [
     language: "JavaScript",
     stars: 0,
     repoUrl: "https://github.com/rodrigochavesoa/studylib-direct-pdf-downloader",
-    siteUrl: null,
+    sites: [],
     featured: false,
+    privateRepo: false,
   },
   {
     name: "pmbok8-interactive-flow",
@@ -80,8 +111,14 @@ export const projects: Project[] = [
     language: "TypeScript",
     stars: 1,
     repoUrl: "https://github.com/rodrigochavesoa/pmbok8-interactive-flow",
-    siteUrl: null,
+    sites: [
+      {
+        label: "Site",
+        href: "https://rodrigochavesoa.github.io/pmbok8-interactive-flow/",
+      },
+    ],
     featured: false,
+    privateRepo: false,
   },
 ];
 

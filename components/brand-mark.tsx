@@ -1,10 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "cn";
 
 export function BrandMark({ className }: { className?: string }) {
   return (
-    <a
-      href="#topo"
+    <Link
+      href="/"
       className={cn("inline-flex min-h-11 items-center gap-[10px]", className)}
     >
       <Image
@@ -15,6 +16,6 @@ export function BrandMark({ className }: { className?: string }) {
         style={{ width: "auto", height: 28 }}
       />
       <span className="signature text-base">@colabdeveloper</span>
-    </a>
+    </Link>
   );
 }

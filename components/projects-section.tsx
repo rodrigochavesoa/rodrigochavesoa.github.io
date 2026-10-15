@@ -20,24 +20,25 @@ export function ProjectsSection() {
             id="projetos-title"
             className="text-[clamp(1.75rem,2.7vw,2.3rem)] font-[650]"
           >
-            Repositórios fixados
-            <span className="mt-1 block text-accent-ink">e o STAFF APP.</span>
+            O que a comunidade publica
+            <span className="mt-1 block text-accent-ink">e o que está no ar.</span>
           </h2>
           <p className="max-w-2xl text-muted-foreground">
-            Cada texto abaixo é a descrição publicada no GitHub. Onde não há
-            site do projeto, o cartão leva só ao repositório.
+            Textos tirados do GitHub ou do site no ar. Repositório privado não
+            leva link de código. Onde não há site, o cartão leva só ao
+            repositório.
           </p>
         </div>
 
         <div className="grid gap-[18px]">
           {featured.map((project) => (
-            <ProjectCard key={project.repo} project={project} />
+            <ProjectCard key={project.name} project={project} />
           ))}
         </div>
 
         <div className="grid gap-[18px] md:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
           {rest.map((project) => (
-            <ProjectCard key={project.repo} project={project} />
+            <ProjectCard key={project.name} project={project} />
           ))}
         </div>
       </Container>

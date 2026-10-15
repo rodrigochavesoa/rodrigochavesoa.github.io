@@ -16,21 +16,28 @@ export function ProjectCard({ project }: { project: Project }) {
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
           {project.featured ? <Badge>Destaque</Badge> : null}
-          <Badge variant="outline">{project.language}</Badge>
+          {project.privateRepo ? <Badge variant="outline">Privado</Badge> : null}
+          {project.language ? (
+            <Badge variant="outline">{project.language}</Badge>
+          ) : null}
         </div>
         <CardTitle>{project.name}</CardTitle>
-        <p className="font-mono text-xs break-words text-muted-foreground">
-          {project.repo}
-        </p>
+        {project.repo ? (
+          <p className="font-mono text-xs break-words text-muted-foreground">
+            {project.repo}
+          </p>
+        ) : null}
         <CardDescription className="text-[0.95rem] leading-normal text-foreground">
           {project.description}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <p className="font-mono text-sm text-muted-foreground tabular-nums">
-          {starsLabel(project.stars)}
-        </p>
-      </CardContent>
+      {project.stars !== null ? (
+        <CardContent>
+          <p className="font-mono text-sm text-muted-foreground tabular-nums">
+            {starsLabel(project.stars)}
+          </p>
+        </CardContent>
+      ) : null}
       <CardFooter className="mt-auto">
         <ProjectLinks project={project} />
       </CardFooter>

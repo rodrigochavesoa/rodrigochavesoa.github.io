@@ -22,9 +22,12 @@ const themeBoot = `(function(){try{var q=new URLSearchParams(location.search).ge
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rodrigochavesoa.github.io"),
-  title: "Rodrigo Chaves · Desenvolvedor",
+  title: {
+    default: "@colabdeveloper",
+    template: "%s · @colabdeveloper",
+  },
   description:
-    "Portfólio de Rodrigo Chaves (@colabdeveloper), com os repositórios fixados no GitHub e o STAFF APP.",
+    "Comunidade @colabdeveloper: laboratório colaborativo de Rodrigo Chaves, com projetos no ar e repositórios públicos.",
 };
 
 export default function RootLayout({

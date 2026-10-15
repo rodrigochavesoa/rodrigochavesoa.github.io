@@ -43,6 +43,8 @@
   --color-hero: var(--hero);
   --color-hero-muted: var(--hero-muted);
   --color-surface-subtle: var(--surface-subtle);
+  --color-social: var(--social);
+  --color-social-hover: var(--social-hover);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -94,6 +96,8 @@
   --sig-color: #1e2733;
   --footer-color: #6b7684;
   --footer-rule: #d5dae1;
+  --social: #6b7684;
+  --social-hover: #2154c2;
   --sidebar: var(--surface);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: var(--brand);
@@ -138,6 +142,8 @@
   --sig-color: #e8ecf1;
   --footer-color: #8c98a8;
   --footer-rule: #334052;
+  --social: #8c98a8;
+  --social-hover: #9bbcff;
   --sidebar: var(--surface);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: #2154c2;

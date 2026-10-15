@@ -1,6 +1,6 @@
 # Rodrigo Chaves
 
-Portfólio pessoal em [https://rodrigochavesoa.github.io/](https://rodrigochavesoa.github.io/).
+Site da comunidade @colabdeveloper em [https://rodrigochavesoa.github.io/](https://rodrigochavesoa.github.io/). A página sobre o Rodrigo fica em `/about/`. Postagens do LinkedIn entram em `data/posts.ts`; com a lista vazia, a seção não aparece.
 
 Next.js (App Router) com export estático, TypeScript, Tailwind e shadcn/ui. A identidade visual é a do @colabdeveloper.
 

@@ -1,12 +1,13 @@
+import Link from "next/link";
+
 import { BrandMark } from "@/components/brand-mark";
 import { Container } from "@/components/container";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 const links = [
-  { href: "#projetos", label: "Projetos" },
-  { href: "#sobre", label: "Sobre" },
-  { href: "#contato", label: "Contato" },
+  { href: "/#projetos", label: "Projetos" },
+  { href: "/about/", label: "Sobre" },
 ];
 
 export function SiteHeader() {
@@ -24,7 +25,7 @@ export function SiteHeader() {
           >
             {links.map((link) => (
               <Button key={link.href} variant="ghost" asChild>
-                <a href={link.href}>{link.label}</a>
+                <Link href={link.href}>{link.label}</Link>
               </Button>
             ))}
           </nav>
