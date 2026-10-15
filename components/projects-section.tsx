@@ -20,13 +20,13 @@ export function ProjectsSection() {
             id="projetos-title"
             className="text-[clamp(1.75rem,2.7vw,2.3rem)] font-[650]"
           >
-            O que a comunidade publica
-            <span className="mt-1 block text-accent-ink">e o que está no ar.</span>
+            Projetos que eu construí
+            <span className="mt-1 block text-accent-ink">e coloquei no ar.</span>
           </h2>
           <p className="max-w-2xl text-muted-foreground">
-            Textos tirados do GitHub ou do site no ar. Repositório privado não
-            leva link de código. Onde não há site, o cartão leva só ao
-            repositório.
+            Cada um nasceu de um problema real ou de algo que eu queria aprender
+            fazendo. Alguns você usa direto no navegador e a maioria tem o código
+            aberto pra você ver como foram feitos.
           </p>
         </div>
 

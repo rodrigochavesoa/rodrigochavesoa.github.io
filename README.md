@@ -1,6 +1,6 @@
 # Rodrigo Chaves
 
-Site da comunidade @colabdeveloper em [https://rodrigochavesoa.github.io/](https://rodrigochavesoa.github.io/). A página sobre o Rodrigo fica em `/about/`. Os temas de estudo atuais ficam em `data/estudos.ts`.
+Site da comunidade @colabdeveloper em [https://rodrigochavesoa.github.io/](https://rodrigochavesoa.github.io/). A página sobre o Rodrigo fica em `/about/`. Os temas de estudo atuais ficam em `data/estudos.ts`. As publicações ficam em `data/publicacoes.ts`.
 
 Next.js (App Router) com export estático, TypeScript, Tailwind e shadcn/ui. A identidade visual é a do @colabdeveloper.
 
