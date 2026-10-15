@@ -1,7 +1,7 @@
 export type SocialLink = {
   label: string;
   href: string;
-  icon: "youtube" | "linkedin" | "behance" | "github" | "instagram";
+  icon: "youtube" | "linkedin" | "substack" | "behance" | "github" | "instagram";
 };
 
 export const socialLinks: SocialLink[] = [
@@ -14,6 +14,11 @@ export const socialLinks: SocialLink[] = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/rodrigochavesoa",
     icon: "linkedin",
+  },
+  {
+    label: "Substack",
+    href: "https://substack.com/@rodrigocoa",
+    icon: "substack",
   },
   {
     label: "Behance",
