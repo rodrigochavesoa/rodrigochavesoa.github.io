@@ -44,7 +44,7 @@ export const projects: Project[] = [
     name: "STAFF - Guia de Exercícios",
     repo: null,
     description:
-      "Guia de exercícios com busca por nome, grupo ou código, e fichas de treino online. Em rcstorestaff.com.br/staff, a STAFF descreve planos personalizados de musculação e corrida, com suporte e treinos também pelo WhatsApp.",
+      "Guia de exercícios com busca por nome, grupo ou código, e fichas de treino online. Na STAFF os planos são personalizados de musculação e corrida, com suporte e treinos também pelo WhatsApp.",
     language: null,
     stars: null,
     repoUrl: null,
