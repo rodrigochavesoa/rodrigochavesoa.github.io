@@ -32,7 +32,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     label: "Instagram RC STORE",
-    href: "https://www.instagram.com/rcstoreoficial/",
+    href: "https://www.instagram.com/rcstoreloja/",
     icon: "instagram",
   },
   {
