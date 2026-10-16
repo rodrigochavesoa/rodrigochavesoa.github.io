@@ -22,7 +22,7 @@ export const profile = {
   reflectionTitle: "Uma coisa que sempre ficou comigo",
   reflection: [
     "Ser autodidata me ensinou disciplina e a arregaçar as mangas. Mas também me ensinou que aprender sozinho não significa caminhar sozinho. Pedir ajuda e aprender com quem já fez o caminho foi o que me destravou mais de uma vez.",
-    "Eu uso IA todo dia, com Cursor e Codex. Mas IA não substitui fundamento, revisão nem responsabilidade técnica. Com uma base fraca, ela só acelera uma decisão ruim. Por isso, quando aparece um problema difícil, eu dou um passo atrás e procuro a causa antes de aceitar a primeira solução que aparece.",
+    "Eu trabalho com IA todo dia, com Cursor e Codex. Mas IA não substitui fundamento, revisão nem responsabilidade técnica. Com uma base fraca, ela só acelera uma decisão ruim. Por isso, quando aparece um problema difícil, eu dou um passo atrás e procuro a causa antes de aceitar a primeira solução que aparece.",
     "E olho pra trás com gratidão por todo mundo que me ensinou. É por isso que meus projetos são abertos: se algo que eu compartilho aqui ajudar alguém a dar o próximo passo, já valeu.",
   ],
   hello: [
