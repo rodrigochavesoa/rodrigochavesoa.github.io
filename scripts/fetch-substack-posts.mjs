@@ -4,6 +4,7 @@
  */
 import { execFile } from "node:child_process";
 import { appendFileSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -85,6 +86,46 @@ async function fetchFeedWithCurl(url) {
   return body;
 }
 
+async function fetchFeedWithBrowser(url) {
+  const require = createRequire(path.join(process.env.PLAYWRIGHT_PREFIX, "package.json"));
+  const { chromium } = require("playwright-core");
+  const browser = await chromium.launch({
+    executablePath: process.env.CHROME_PATH,
+    headless: true,
+    args: ["--no-sandbox", "--disable-dev-shm-usage"],
+  });
+  try {
+    const page = await browser.newPage({ userAgent: USER_AGENT });
+    const bodies = [];
+    page.on("response", (response) => {
+      const type = response.headers()["content-type"] || "";
+      if (response.status() === 200 && type.includes("xml")) {
+        bodies.push(response.text().catch(() => ""));
+      }
+    });
+    try {
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      console.log(`navegação: ${detail}`);
+    }
+    const started = Date.now();
+    let xml = "";
+    while (!xml.includes("<rss") && Date.now() - started < 20_000) {
+      const chunks = await Promise.all(bodies.splice(0, bodies.length));
+      xml = chunks.find((chunk) => chunk.includes("<rss")) ?? "";
+      if (!xml) await page.waitForTimeout(500);
+    }
+    if (!xml.includes("<rss")) {
+      throw new Error("O navegador não conseguiu passar o desafio do Cloudflare.");
+    }
+    console.log("Feed obtido via navegador.");
+    return xml;
+  } finally {
+    await browser.close();
+  }
+}
+
 async function fetchFeed(url) {
   try {
     const response = await fetch(url, {
@@ -105,7 +146,14 @@ async function fetchFeed(url) {
     const detail = error instanceof Error ? error.message : String(error);
     console.log(`fetch falhou (${detail}). Tentando curl.`);
   }
-  return fetchFeedWithCurl(url);
+  try {
+    return await fetchFeedWithCurl(url);
+  } catch (error) {
+    if (!process.env.CHROME_PATH || !process.env.PLAYWRIGHT_PREFIX) throw error;
+    const detail = error instanceof Error ? error.message : String(error);
+    console.log(`${detail} Tentando o navegador.`);
+    return fetchFeedWithBrowser(url);
+  }
 }
 
 export async function syncSubstackPosts({
