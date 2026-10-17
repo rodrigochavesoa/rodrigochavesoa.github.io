@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/container";
 import { Kicker } from "@/components/kicker";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { publicacoes } from "@/data/publicacoes";
+import {
+  publicacoes,
+  SUBSTACK_HOME,
+  verTodosPublicacoes,
+} from "@/data/publicacoes";
 
 export function PublicacoesSection() {
   if (publicacoes.length === 0) return null;
@@ -60,6 +65,19 @@ export function PublicacoesSection() {
             </Card>
           ))}
         </div>
+        {verTodosPublicacoes ? (
+          <Button variant="outline" asChild>
+            <a
+              href={SUBSTACK_HOME}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver todos
+              <ArrowUpRight data-icon="inline-end" strokeWidth={1.8} />
+              <span className="sr-only">, abre em nova aba</span>
+            </a>
+          </Button>
+        ) : null}
       </Container>
     </section>
   );
