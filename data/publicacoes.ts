@@ -2,8 +2,11 @@ import rawPosts from "./publicacoes.json";
 
 /**
  * Posts do Substack em `publicacoes.json`, seguidos dos cards fixos.
- * O script só acrescenta posts novos e não apaga os que saem do feed.
+ * A home mostra só os 4 mais recentes. O JSON e o sync guardam o histórico.
  */
+
+export const SUBSTACK_HOME = "https://rodrigocoa.substack.com";
+const LIMITE_SUBSTACK = 4;
 export type PublicacaoLink = {
   label: string;
   href: string;
@@ -74,6 +77,17 @@ const substack: Publicacao[] = (Array.isArray(posts) ? posts : [])
     image: post.image,
     tema: "Substack",
     links: [{ label: "Ler", href: post.link }],
-  }));
+  }))
+  .sort((a, b) => {
+    const aDate = a.date ?? "";
+    const bDate = b.date ?? "";
+    if (aDate !== bDate) return aDate < bDate ? 1 : -1;
+    return (a.link ?? "").localeCompare(b.link ?? "");
+  });
 
-export const publicacoes: Publicacao[] = [...substack, ...fixas];
+export const verTodosPublicacoes = substack.length > 3;
+
+export const publicacoes: Publicacao[] = [
+  ...substack.slice(0, LIMITE_SUBSTACK),
+  ...fixas,
+];
