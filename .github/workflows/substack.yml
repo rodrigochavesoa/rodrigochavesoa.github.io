@@ -16,7 +16,8 @@ concurrency:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    # O Cloudflare bloqueia os IPs do ubuntu-latest. O macOS usa outra faixa.
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4

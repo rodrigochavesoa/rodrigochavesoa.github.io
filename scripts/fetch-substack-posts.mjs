@@ -76,7 +76,10 @@ async function fetchFeedWithCurl(url) {
   const status = Number(stdout.slice(marker + "\n__HTTP_STATUS__:".length).trim());
   const body = stdout.slice(0, marker);
   if (!Number.isInteger(status) || status < 200 || status >= 300) {
-    throw new Error(`Feed respondeu HTTP ${status || "desconhecido"}.`);
+    const snippet = body.replace(/\s+/g, " ").trim().slice(0, 180);
+    throw new Error(
+      `Feed respondeu HTTP ${status || "desconhecido"}${snippet ? `: ${snippet}` : "."}`,
+    );
   }
   console.log("Feed obtido via curl.");
   return body;
