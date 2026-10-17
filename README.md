@@ -18,7 +18,26 @@ npm run build
 
 O workflow `.github/workflows/pages.yml` faz o build e publica com `actions/deploy-pages`. O arquivo `public/.nojekyll` entra no export, e o workflow também cria `out/.nojekyll`.
 
-O workflow `.github/workflows/substack.yml` lê `https://rodrigocoa.substack.com/feed` todo dia às 09:00 (horário da Bahia) e também quando disparado manualmente. Notes ficam de fora. Ele só faz commit de `data/publicacoes.json` quando entra um post novo, acrescentando esse post sem apagar os que já saíram do feed, e então dispara o deploy do Pages. Os cards de TabNews e DevHub permanecem na seção, depois dos posts.
+O workflow `.github/workflows/substack.yml` roda todo dia às 09:00 (horário da Bahia) e também quando disparado manualmente. Ele não chama o Substack direto, porque o Cloudflare responde 403 aos IPs do GitHub Actions. Sem `SUBSTACK_FEED_URL`, a leitura usa `https://api.rss2json.com/v1/api.json?rss_url=https://rodrigocoa.substack.com/feed`. A variável ou o secret com esse nome, em Settings → Secrets and variables → Actions, troca o endereço por um proxy seu.
+
+A resposta pode ser o XML do feed ou o JSON do rss2json (`items` com `title`, `link`, `pubDate`, `description` e `thumbnail`). Os dois viram o mesmo `data/publicacoes.json`. Notes ficam de fora. O workflow só faz commit quando entra um post novo, sem apagar os que já saíram do feed, e então dispara o deploy do Pages. Os cards de TabNews e DevHub permanecem na seção, depois dos posts.
+
+Exemplo de Cloudflare Worker que só repassa o feed, com cache de 1 hora:
+
+```js
+export default {
+  async fetch() {
+    const upstream = await fetch("https://rodrigocoa.substack.com/feed", {
+      cf: { cacheEverything: true, cacheTtl: 3600 },
+    });
+    const headers = new Headers(upstream.headers);
+    headers.set("cache-control", "public, max-age=3600");
+    return new Response(upstream.body, { status: upstream.status, headers });
+  },
+};
+```
+
+A URL publicada desse Worker entra em `SUBSTACK_FEED_URL`.
 
 Para o site ir ao ar:
 

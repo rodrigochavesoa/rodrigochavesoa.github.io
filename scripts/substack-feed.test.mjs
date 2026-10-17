@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { isSubstackPost, parseFeed, syncPlan } from "./substack-feed.mjs";
+import {
+  feedUrlFromEnv,
+  isSubstackPost,
+  parseFeed,
+  parseFeedDocument,
+  RSS2JSON_FEED_URL,
+  syncPlan,
+} from "./substack-feed.mjs";
 
 const post = (link, extra = {}) => ({
   title: "Post",
@@ -116,6 +123,102 @@ test("não deixa Notes nem itens que não são posts", () => {
 
 test("feed sem itens gera lista vazia", () => {
   assert.deepEqual(parseFeed(feed("")), []);
+});
+
+test("SUBSTACK_FEED_URL vazia cai no rss2json", () => {
+  assert.equal(feedUrlFromEnv({}), RSS2JSON_FEED_URL);
+  assert.equal(feedUrlFromEnv({ SUBSTACK_FEED_URL: "  " }), RSS2JSON_FEED_URL);
+  assert.equal(
+    feedUrlFromEnv({ SUBSTACK_FEED_URL: " https://worker.example/feed " }),
+    "https://worker.example/feed",
+  );
+});
+
+test("normaliza o JSON do rss2json para o formato dos posts", () => {
+  const posts = parseFeedDocument(
+    JSON.stringify({
+      status: "ok",
+      items: [
+        {
+          title: "Fork, PR e Code Review na prática.",
+          link: "https://rodrigocoa.substack.com/p/fork-pr?utm_source=rss",
+          pubDate: "Sat, 17 Oct 2026 01:08:12 GMT",
+          description: "<p>Toda vez que eu ia contribuir.</p>",
+          thumbnail: "https://substackcdn.com/image/fetch/cover.png",
+        },
+        {
+          title: "Uma note",
+          link: "https://substack.com/@rodrigocoa/note/c-1",
+          pubDate: "Sat, 17 Oct 2026 02:00:00 GMT",
+          description: "não entra",
+          thumbnail: "",
+        },
+        {
+          title: "Note categorizada",
+          link: "https://rodrigocoa.substack.com/p/disfarce",
+          pubDate: "Sat, 17 Oct 2026 03:00:00 GMT",
+          description: "não entra",
+          thumbnail: "",
+          categories: ["note"],
+        },
+      ],
+    }),
+  );
+  assert.deepEqual(posts, [
+    {
+      title: "Fork, PR e Code Review na prática.",
+      resumo: "Toda vez que eu ia contribuir.",
+      date: "2026-10-17",
+      link: "https://rodrigocoa.substack.com/p/fork-pr",
+      image: "https://substackcdn.com/image/fetch/cover.png",
+    },
+  ]);
+});
+
+test("thumbnail vazio vira imagem ausente", () => {
+  const posts = parseFeedDocument(
+    JSON.stringify({
+      status: "ok",
+      items: [
+        {
+          title: "Sem capa",
+          link: "https://rodrigocoa.substack.com/p/sem-capa",
+          pubDate: "2026-10-17 01:08:12",
+          description: "Resumo",
+          thumbnail: "  ",
+        },
+      ],
+    }),
+  );
+  assert.equal(posts[0].image, null);
+  assert.equal(posts[0].date, "2026-10-17");
+});
+
+test("rejeita erro do rss2json", () => {
+  assert.throws(
+    () => parseFeedDocument(JSON.stringify({ status: "error", message: "Internal error" })),
+    /Internal error/,
+  );
+});
+
+test("aceita o XML do feed quando a URL é um proxy", () => {
+  const xml = feed(`
+    <item>
+      <title>Post via worker</title>
+      <description>Resumo do proxy</description>
+      <link>https://rodrigocoa.substack.com/p/via-worker</link>
+      <pubDate>Fri, 16 Oct 2026 10:00:00 GMT</pubDate>
+    </item>
+  `);
+  assert.deepEqual(parseFeedDocument(xml), [
+    {
+      title: "Post via worker",
+      resumo: "Resumo do proxy",
+      date: "2026-10-16",
+      link: "https://rodrigocoa.substack.com/p/via-worker",
+      image: null,
+    },
+  ]);
 });
 
 test("não regrava quando não há post novo", () => {

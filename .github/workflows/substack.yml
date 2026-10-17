@@ -31,18 +31,10 @@ jobs:
       - name: Testar o parser
         run: node --test scripts/substack-feed.test.mjs
 
-      - name: Instalar Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Instalar playwright-core
-        run: npm install --no-save --prefix "$RUNNER_TEMP/pw" playwright-core
-
       - name: Buscar posts
         id: fetch
         env:
-          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
-          PLAYWRIGHT_PREFIX: ${{ runner.temp }}/pw
+          SUBSTACK_FEED_URL: ${{ secrets.SUBSTACK_FEED_URL || vars.SUBSTACK_FEED_URL }}
         run: node scripts/fetch-substack-posts.mjs
 
       - name: Commit se houver post novo
