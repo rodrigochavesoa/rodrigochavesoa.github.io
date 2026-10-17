@@ -92,13 +92,18 @@ async function fetchFeedWithBrowser(url) {
   const browser = await chromium.launch({
     executablePath: process.env.CHROME_PATH,
     headless: true,
-    args: ["--no-sandbox", "--disable-dev-shm-usage"],
+    ignoreDefaultArgs: ["--enable-automation"],
+    args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
   });
   try {
     const page = await browser.newPage({ userAgent: USER_AGENT });
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+    });
     const bodies = [];
     page.on("response", (response) => {
       const type = response.headers()["content-type"] || "";
+      console.log(`resposta ${response.status()} ${type} ${response.url().slice(0, 80)}`);
       if (response.status() === 200 && type.includes("xml")) {
         bodies.push(response.text().catch(() => ""));
       }
@@ -109,15 +114,25 @@ async function fetchFeedWithBrowser(url) {
       const detail = error instanceof Error ? error.message : String(error);
       console.log(`navegação: ${detail}`);
     }
+    await page
+      .waitForFunction(() => !document.title.includes("Just a moment"), { timeout: 25_000 })
+      .catch(() => {});
     const started = Date.now();
     let xml = "";
-    while (!xml.includes("<rss") && Date.now() - started < 20_000) {
+    while (!xml.includes("<rss") && Date.now() - started < 15_000) {
       const chunks = await Promise.all(bodies.splice(0, bodies.length));
       xml = chunks.find((chunk) => chunk.includes("<rss")) ?? "";
+      if (!xml) {
+        const html = await page.content();
+        const start = html.indexOf("<rss");
+        const end = html.lastIndexOf("</rss>");
+        if (start !== -1 && end > start) xml = html.slice(start, end + "</rss>".length);
+      }
       if (!xml) await page.waitForTimeout(500);
     }
     if (!xml.includes("<rss")) {
-      throw new Error("O navegador não conseguiu passar o desafio do Cloudflare.");
+      const title = await page.title().catch(() => "");
+      throw new Error(`O navegador não conseguiu passar o desafio do Cloudflare (${title}).`);
     }
     console.log("Feed obtido via navegador.");
     return xml;
