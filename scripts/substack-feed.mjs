@@ -221,8 +221,36 @@ export function findNewPosts(previous, fresh) {
   });
 }
 
-/** `posts` é a lista atual só quando existe post novo. Caso contrário, null: não regravar. */
+function postKey(post) {
+  try {
+    return canonicalLink(post.link);
+  } catch {
+    return post.link;
+  }
+}
+
+/**
+ * Acumula posts novos sobre o arquivo já gravado.
+ * Posts que saíram do feed permanecem. Sem post novo, `posts` é null.
+ */
 export function syncPlan(previous, fresh) {
-  const added = findNewPosts(previous, fresh);
-  return { added, posts: added.length > 0 ? fresh : null };
+  const stored = (previous ?? []).filter((post) => post && typeof post.link === "string");
+  const added = findNewPosts(stored, fresh);
+  if (added.length === 0) return { added, posts: null };
+
+  const seen = new Set();
+  const posts = [];
+  for (const post of [...stored, ...added]) {
+    const key = postKey(post);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    posts.push(post);
+  }
+  posts.sort((a, b) => {
+    const aDate = typeof a.date === "string" ? a.date : "";
+    const bDate = typeof b.date === "string" ? b.date : "";
+    if (aDate !== bDate) return aDate < bDate ? 1 : -1;
+    return String(a.link).localeCompare(String(b.link));
+  });
+  return { added, posts };
 }

@@ -18,7 +18,7 @@ npm run build
 
 O workflow `.github/workflows/pages.yml` faz o build e publica com `actions/deploy-pages`. O arquivo `public/.nojekyll` entra no export, e o workflow também cria `out/.nojekyll`.
 
-O workflow `.github/workflows/substack.yml` lê `https://rodrigocoa.substack.com/feed` todo dia às 09:00 (horário da Bahia) e também quando disparado manualmente. Notes ficam de fora. Ele só faz commit de `data/publicacoes.json` quando entra um post novo e, nesse caso, dispara o deploy do Pages. Sem posts, a seção de publicações não aparece.
+O workflow `.github/workflows/substack.yml` lê `https://rodrigocoa.substack.com/feed` todo dia às 09:00 (horário da Bahia) e também quando disparado manualmente. Notes ficam de fora. Ele só faz commit de `data/publicacoes.json` quando entra um post novo, acrescentando esse post sem apagar os que já saíram do feed, e então dispara o deploy do Pages. Os cards de TabNews e DevHub permanecem na seção, depois dos posts.
 
 Para o site ir ao ar:
 

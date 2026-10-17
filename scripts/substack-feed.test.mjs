@@ -130,15 +130,33 @@ test("não regrava quando não há post novo", () => {
   assert.equal(removed.posts, null);
 });
 
-test("grava a lista inteira quando entra um post novo", () => {
-  const previous = [post("https://rodrigocoa.substack.com/p/antigo")];
+test("acumula o post novo e mantém os que saíram do feed", () => {
+  const previous = [
+    post("https://rodrigocoa.substack.com/p/antigo", {
+      date: "2026-09-01",
+      resumo: "antes",
+    }),
+    post("https://rodrigocoa.substack.com/p/saiu", {
+      date: "2026-10-10",
+      resumo: "arquivado",
+    }),
+  ];
   const fresh = [
     post("https://rodrigocoa.substack.com/p/novo", { date: "2026-10-16" }),
-    post("https://rodrigocoa.substack.com/p/antigo?utm=1", { resumo: "atualizado" }),
+    post("https://rodrigocoa.substack.com/p/antigo?utm=1", {
+      date: "2026-09-01",
+      resumo: "atualizado",
+    }),
   ];
   const plan = syncPlan(previous, fresh);
   assert.equal(plan.added.length, 1);
   assert.equal(plan.added[0].link, "https://rodrigocoa.substack.com/p/novo");
-  assert.equal(plan.posts.length, 2);
-  assert.equal(plan.posts[1].resumo, "atualizado");
+  assert.deepEqual(
+    plan.posts.map((item) => [item.link, item.resumo]),
+    [
+      ["https://rodrigocoa.substack.com/p/novo", "Resumo"],
+      ["https://rodrigocoa.substack.com/p/saiu", "arquivado"],
+      ["https://rodrigocoa.substack.com/p/antigo", "antes"],
+    ],
+  );
 });

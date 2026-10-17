@@ -1,8 +1,8 @@
 import rawPosts from "./publicacoes.json";
 
 /**
- * Posts do Substack. `publicacoes.json` é gerado por
- * `scripts/fetch-substack-posts.mjs`. Lista vazia esconde a seção.
+ * Posts do Substack em `publicacoes.json`, seguidos dos cards fixos.
+ * O script só acrescenta posts novos e não apaga os que saem do feed.
  */
 export type PublicacaoLink = {
   label: string;
@@ -17,10 +17,38 @@ type SubstackPost = {
   image: string | null;
 };
 
-export type Publicacao = SubstackPost & {
+export type Publicacao = {
+  title: string;
+  resumo: string;
   tema: string;
   links: PublicacaoLink[];
+  date?: string;
+  link?: string;
+  image?: string | null;
 };
+
+const fixas: Publicacao[] = [
+  {
+    title: "TabNews",
+    tema: "TabNews",
+    resumo:
+      "Perfil rodrigocoa e a lista de conteúdos publicados. Entre os textos estão o pitch do Fluxo PMBOK 8 Interativo e o Colab PDF Reader, projeto open source.",
+    links: [
+      { label: "Perfil", href: "https://www.tabnews.com.br/rodrigocoa" },
+      {
+        label: "Conteúdos",
+        href: "https://www.tabnews.com.br/rodrigocoa/conteudos/1",
+      },
+    ],
+  },
+  {
+    title: "DevHub",
+    tema: "Comunidade",
+    resumo:
+      "Faço parte da comunidade DevHub, com publicações e projetos open source. O site reúne a comunidade, cursos, vagas, eventos e projetos abertos.",
+    links: [{ label: "DevHub", href: "https://algoritmoecafe.com/" }],
+  },
+];
 
 function isSubstackPost(value: unknown): value is SubstackPost {
   if (!value || typeof value !== "object") return false;
@@ -36,7 +64,7 @@ function isSubstackPost(value: unknown): value is SubstackPost {
 
 const posts: unknown = rawPosts;
 
-export const publicacoes: Publicacao[] = (Array.isArray(posts) ? posts : [])
+const substack: Publicacao[] = (Array.isArray(posts) ? posts : [])
   .filter(isSubstackPost)
   .map((post) => ({
     title: post.title,
@@ -47,3 +75,5 @@ export const publicacoes: Publicacao[] = (Array.isArray(posts) ? posts : [])
     tema: "Substack",
     links: [{ label: "Ler", href: post.link }],
   }));
+
+export const publicacoes: Publicacao[] = [...substack, ...fixas];
