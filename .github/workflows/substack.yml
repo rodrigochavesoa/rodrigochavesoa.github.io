@@ -1,0 +1,55 @@
+name: Sync Substack posts
+
+on:
+  schedule:
+    # 12:00 UTC = 09:00 em Feira de Santana (UTC−3)
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: substack-posts
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Testar o parser
+        run: node --test scripts/substack-feed.test.mjs
+
+      - name: Buscar posts
+        id: fetch
+        run: node scripts/fetch-substack-posts.mjs
+
+      - name: Commit se houver post novo
+        id: commit
+        if: steps.fetch.outputs.new_posts != '0'
+        run: |
+          if git diff --quiet -- data/publicacoes.json; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git add data/publicacoes.json
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "feat: atualiza publicações com posts novos do Substack"
+          git push origin HEAD:main
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Disparar deploy do Pages
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
