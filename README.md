@@ -1,6 +1,6 @@
 # Rodrigo Chaves
 
-Site da comunidade @colabdeveloper em [https://rodrigochavesoa.github.io/](https://rodrigochavesoa.github.io/). A página sobre o Rodrigo fica em `/about/`. Os temas de estudo atuais ficam em `data/estudos.ts`. As publicações ficam em `data/publicacoes.ts`.
+Site da comunidade @colabdeveloper em [https://rodrigochavesoa.github.io/](https://rodrigochavesoa.github.io/). A página sobre o Rodrigo fica em `/about/`. Os temas de estudo atuais ficam em `data/estudos.ts`. As publicações vêm de `data/publicacoes.json`, gerado a partir do feed do Substack.
 
 Next.js (App Router) com export estático, TypeScript, Tailwind e shadcn/ui. A identidade visual é a do @colabdeveloper.
 
@@ -17,6 +17,8 @@ npm run build
 ## GitHub Pages
 
 O workflow `.github/workflows/pages.yml` faz o build e publica com `actions/deploy-pages`. O arquivo `public/.nojekyll` entra no export, e o workflow também cria `out/.nojekyll`.
+
+O workflow `.github/workflows/substack.yml` lê `https://rodrigocoa.substack.com/feed` todo dia às 09:00 (horário da Bahia) e também quando disparado manualmente. Notes ficam de fora. Ele só faz commit de `data/publicacoes.json` quando entra um post novo, acrescentando esse post sem apagar os que já saíram do feed, e então dispara o deploy do Pages. Os cards de TabNews e DevHub permanecem na seção, depois dos posts.
 
 Para o site ir ao ar:
 

@@ -1,6 +1,20 @@
+import rawPosts from "./publicacoes.json";
+
+/**
+ * Posts do Substack em `publicacoes.json`, seguidos dos cards fixos.
+ * O script só acrescenta posts novos e não apaga os que saem do feed.
+ */
 export type PublicacaoLink = {
   label: string;
   href: string;
+};
+
+type SubstackPost = {
+  title: string;
+  resumo: string;
+  date: string;
+  link: string;
+  image: string | null;
 };
 
 export type Publicacao = {
@@ -8,9 +22,12 @@ export type Publicacao = {
   resumo: string;
   tema: string;
   links: PublicacaoLink[];
+  date?: string;
+  link?: string;
+  image?: string | null;
 };
 
-export const publicacoes: Publicacao[] = [
+const fixas: Publicacao[] = [
   {
     title: "TabNews",
     tema: "TabNews",
@@ -32,3 +49,31 @@ export const publicacoes: Publicacao[] = [
     links: [{ label: "DevHub", href: "https://algoritmoecafe.com/" }],
   },
 ];
+
+function isSubstackPost(value: unknown): value is SubstackPost {
+  if (!value || typeof value !== "object") return false;
+  const post = value as Record<string, unknown>;
+  return (
+    typeof post.title === "string" &&
+    typeof post.resumo === "string" &&
+    typeof post.date === "string" &&
+    typeof post.link === "string" &&
+    (typeof post.image === "string" || post.image === null)
+  );
+}
+
+const posts: unknown = rawPosts;
+
+const substack: Publicacao[] = (Array.isArray(posts) ? posts : [])
+  .filter(isSubstackPost)
+  .map((post) => ({
+    title: post.title,
+    resumo: post.resumo,
+    date: post.date,
+    link: post.link,
+    image: post.image,
+    tema: "Substack",
+    links: [{ label: "Ler", href: post.link }],
+  }));
+
+export const publicacoes: Publicacao[] = [...substack, ...fixas];
