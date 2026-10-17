@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "title": "Fork, PR e Code Review na prática.",
+    "resumo": "Toda vez que eu ia contribuir num projeto dos outros, batia a dúvida: era origin ou upstream? Então anotei o fluxo que eu uso de verdade. Salva aí.",
+    "date": "2026-10-17",
+    "link": "https://rodrigocoa.substack.com/p/fork-pr-e-code-review-na-pratica",
+    "image": "https://substackcdn.com/image/fetch/$s_!864N!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6a2ae543-534d-44fd-9cde-df1900134f2a_1200x675.gif"
+  }
+]
