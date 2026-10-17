@@ -15,6 +15,13 @@ const NAMED_ENTITIES = {
 };
 
 export const FEED_URL = "https://rodrigocoa.substack.com/feed";
+export const RSS2JSON_FEED_URL =
+  "https://api.rss2json.com/v1/api.json?rss_url=https://rodrigocoa.substack.com/feed";
+
+export function feedUrlFromEnv(env = process.env) {
+  const configured = typeof env?.SUBSTACK_FEED_URL === "string" ? env.SUBSTACK_FEED_URL.trim() : "";
+  return configured || RSS2JSON_FEED_URL;
+}
 
 export function decodeEntities(text) {
   return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (entity, body) => {
@@ -199,6 +206,58 @@ export function parseFeed(xml) {
     return a.link.localeCompare(b.link);
   });
   return posts;
+}
+
+function escapeXml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeCdata(value) {
+  return String(value ?? "").replace(/]]>/g, "]]]]><![CDATA[>");
+}
+
+export function parseRss2Json(body) {
+  let data;
+  try {
+    data = JSON.parse(body);
+  } catch {
+    throw new Error("A resposta JSON do feed é inválida.");
+  }
+  if (data && typeof data.status === "string" && data.status !== "ok") {
+    const message = typeof data.message === "string" ? data.message : data.status;
+    throw new Error(`rss2json respondeu erro: ${message}`);
+  }
+  if (!data || !Array.isArray(data.items)) {
+    throw new Error("A resposta JSON não tem a lista items.");
+  }
+  const items = data.items
+    .map((item) => {
+      const thumbnail = typeof item?.thumbnail === "string" ? item.thumbnail.trim() : "";
+      const enclosure = thumbnail
+        ? `<enclosure url="${escapeXml(thumbnail)}" type="image/jpeg"/>`
+        : "";
+      const categories = Array.isArray(item?.categories)
+        ? item.categories
+            .filter((category) => typeof category === "string" && category.trim())
+            .map((category) => `<category><![CDATA[${escapeCdata(category)}]]></category>`)
+            .join("")
+        : "";
+      return `<item><title><![CDATA[${escapeCdata(item?.title)}]]></title><link>${escapeXml(item?.link)}</link><pubDate>${escapeXml(item?.pubDate)}</pubDate><description><![CDATA[${escapeCdata(item?.description)}]]></description>${enclosure}${categories}</item>`;
+    })
+    .join("");
+  return parseFeed(`<?xml version="1.0"?><rss version="2.0"><channel>${items}</channel></rss>`);
+}
+
+export function parseFeedDocument(body) {
+  const text = String(body ?? "").replace(/^\uFEFF/, "").trim();
+  if (!text) throw new Error("A resposta do feed veio vazia.");
+  if (text.startsWith("<")) return parseFeed(text);
+  if (text.startsWith("{")) return parseRss2Json(text);
+  throw new Error("A resposta não é um feed RSS nem o JSON do rss2json.");
 }
 
 export function findNewPosts(previous, fresh) {
