@@ -1,5 +1,19 @@
 [
   {
+    "title": "O Nordeste virou aposta federal para data centers. Mas a rede para 4 GW só começa a chegar em 2032.",
+    "resumo": "O Nordeste virou aposta de polo. A rede vem depois. As 5 da semana.",
+    "date": "2026-10-18",
+    "link": "https://rodrigocoa.substack.com/p/o-nordeste-virou-aposta-federal-para",
+    "image": "https://substack-post-media.s3.amazonaws.com/public/images/e67aa413-f54a-4599-837b-40799e37b780_1200x627.png"
+  },
+  {
+    "title": "Palestra do Google I/O: como passei a tratar cada revisão de PR como aula, numa API em Go que eu ainda estou aprendendo a escrever.",
+    "resumo": "Só aprovo o PR que eu consigo explicar. Code review como mentoria na era da IA",
+    "date": "2026-10-18",
+    "link": "https://rodrigocoa.substack.com/p/palestra-do-google-io-como-passei",
+    "image": "https://substack-post-media.s3.amazonaws.com/public/images/1d20d2ac-cdb6-4bc2-a7f3-16f3edd3baef_1920x1080.png"
+  },
+  {
     "title": "Fork, PR e Code Review na prática.",
     "resumo": "Toda vez que eu ia contribuir num projeto dos outros, batia a dúvida: era origin ou upstream? Então anotei o fluxo que eu uso de verdade. Salva aí.",
     "date": "2026-10-17",
